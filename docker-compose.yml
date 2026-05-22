@@ -1,0 +1,36 @@
+name: silverbullet
+
+services:
+  app:
+    image: ghcr.io/silverbulletmd/silverbullet:latest
+    container_name: silverbullet
+    restart: unless-stopped
+    volumes:
+      - ./space:/space
+    environment:
+      SB_USER: ${SB_USER:-admin}
+      SB_PASS: ${SB_PASS:?SB_PASS nicht gesetzt – siehe .env.example}
+    networks:
+      - proxy
+
+  syncer:
+    image: alpine/git
+    container_name: silverbullet-syncer
+    restart: unless-stopped
+    volumes:
+      - ./space:/space
+      - ./.ssh:/root/.ssh:ro
+      - ./sync-loop.sh:/sync-loop.sh:ro
+    environment:
+      GIT_AUTHOR_NAME:     ${GIT_AUTHOR_NAME:-SilverBullet Sync}
+      GIT_AUTHOR_EMAIL:    ${GIT_AUTHOR_EMAIL:-sync@silverbullet}
+      GIT_COMMITTER_NAME:  ${GIT_AUTHOR_NAME:-SilverBullet Sync}
+      GIT_COMMITTER_EMAIL: ${GIT_AUTHOR_EMAIL:-sync@silverbullet}
+      SYNC_INTERVAL:       ${SYNC_INTERVAL:-900}
+    entrypoint: ["sh", "/sync-loop.sh"]
+    depends_on:
+      - app
+
+networks:
+  proxy:
+    external: true
