@@ -7,8 +7,12 @@ services:
     ports:
       - "127.0.0.1:3000:3000"
     environment:
-      SB_PASS: localtest
+      SB_USER: "admin:localtest"
 
   syncer:
     environment:
       SYNC_INTERVAL: "300"   # alle 5 min beim Testen
+
+networks:
+  proxy:
+    external: false

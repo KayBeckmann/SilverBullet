@@ -8,8 +8,7 @@ services:
     volumes:
       - ./space:/space
     environment:
-      SB_USER: ${SB_USER:-admin}
-      SB_PASS: ${SB_PASS:?SB_PASS nicht gesetzt – siehe .env.example}
+      SB_USER: ${SB_USER:?SB_USER nicht gesetzt – Format: user:pass – siehe .env.example}
     networks:
       - proxy
 

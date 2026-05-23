@@ -68,11 +68,12 @@ cp .env.example .env
 
 | Variable | Beschreibung | Beispiel |
 |----------|-------------|---------|
-| `SB_USER` | Login-Name in SilverBullet | `admin` |
-| `SB_PASS` | Login-Passwort (sicher wählen!) | `MeinSicheresPasswort42` |
+| `SB_USER` | Login in Format `user:passwort` | `admin:MeinSicheresPasswort42` |
 | `GIT_AUTHOR_NAME` | Name für Sync-Commits | `SilverBullet Sync` |
 | `GIT_AUTHOR_EMAIL` | E-Mail für Sync-Commits | `sync@example.com` |
 | `SYNC_INTERVAL` | Sync-Intervall in Sekunden | `900` (= 15 min) |
+
+> **Wichtig:** Ab SilverBullet 2.8 werden Benutzername und Passwort in einer einzigen Variable `SB_USER` im Format `user:passwort` übergeben. Eine separate `SB_PASS`-Variable wird nicht mehr unterstützt.
 
 ---
 
@@ -140,8 +141,15 @@ und Remote-Version direkt synchron sind.
 
 ## Häufige Probleme
 
-### "SB_PASS nicht gesetzt"
-`.env` fehlt oder `SB_PASS` ist leer. Schritt 4 wiederholen.
+### "SB_USER nicht gesetzt" oder "SB_USER must be in the format user:pass"
+`.env` fehlt, `SB_USER` ist leer oder hat nicht das Format `user:passwort`.
+Korrekt: `SB_USER=admin:MeinPasswort` — Schritt 4 wiederholen.
+
+### Syncer: "Bad owner or permissions on /root/.ssh/config"
+Die SSH-Config-Datei hat falsche Berechtigungen. Beheben mit:
+```bash
+chmod 600 .ssh/config
+```
 
 ### Syncer: "Push fehlgeschlagen"
 - SSH-Key nicht bei GitHub eingetragen → Schritt 2 wiederholen
